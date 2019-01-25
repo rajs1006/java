@@ -1,4 +1,4 @@
-package de.funke.tools.testutil.prometheus;
+package com.test.tools.testutil.prometheus;
 
 
 import io.prometheus.client.CollectorRegistry;
@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- * @Created By s.raj@funkedigital.de, Date : 08-June-18
+ * @Created By s.raj@com.testdigital.de, Date : 08-June-18
  * <p>
  * This is Utility class to create graph on Prometheus.
  */

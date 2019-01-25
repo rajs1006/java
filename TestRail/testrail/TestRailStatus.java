@@ -1,4 +1,4 @@
-package de.funke.tools.testutil.testrail;
+package com.test.tools.testutil.testrail;
 
 /**
  * This is enum to support the required status from Test rail.

@@ -1,10 +1,10 @@
-package de.funke.tools.testutil.runner;
+package com.test.tools.testutil.runner;
 
-import de.funke.tools.testutil.prometheus.Prometheus;
-import de.funke.tools.testutil.prometheus.PrometheusUtil;
-import de.funke.tools.testutil.prometheus.PrometheusWrapper;
-import de.funke.tools.testutil.testrail.TestRailFields;
-import de.funke.tools.testutil.testrail.TestRailWrapper;
+import com.test.tools.testutil.prometheus.Prometheus;
+import com.test.tools.testutil.prometheus.PrometheusUtil;
+import com.test.tools.testutil.prometheus.PrometheusWrapper;
+import com.test.tools.testutil.testrail.TestRailFields;
+import com.test.tools.testutil.testrail.TestRailWrapper;
 import org.jenkinsci.testinprogress.runner.ProgressSuite;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
@@ -33,7 +33,7 @@ import java.util.Map;
  * <p>
  * Created by aherr on 18.10.2016.
  *
- * @link https://sconfluence.funkemedien.de/display/FUNDigital/Testautomatisierung
+ * @link https://sconfluence.com.testmedien.de/display/FUNDigital/Testautomatisierung
  * @link https://wiki.jenkins-ci.org/display/JENKINS/Test+In+Progress+Plugin
  */
 public class FDPProgressSuite extends ProgressSuite {

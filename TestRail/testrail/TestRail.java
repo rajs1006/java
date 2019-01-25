@@ -1,4 +1,4 @@
-package de.funke.tools.testutil.testrail;
+package com.test.tools.testutil.testrail;
 
 /**
  * This class is class representation of fields needed to GraphForPassedTest result in Test Rail

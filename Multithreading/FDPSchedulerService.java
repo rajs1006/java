@@ -1,4 +1,4 @@
-package de.funke.tools.testutil.runner;
+package com.test.tools.testutil.runner;
 
 import java.util.Deque;
 import java.util.LinkedList;

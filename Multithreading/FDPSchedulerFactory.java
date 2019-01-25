@@ -1,4 +1,4 @@
-package de.funke.tools.testutil.runner;
+package com.test.tools.testutil.runner;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.runners.model.RunnerScheduler;

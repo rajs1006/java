@@ -1,13 +1,13 @@
-package de.funke.tools.testutil.testrail;
+package com.test.tools.testutil.testrail;
 
-import de.funke.tools.testutil.utils.CommonUtils;
+import com.test.tools.testutil.utils.CommonUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.Nonnull;
 import javax.naming.InvalidNameException;
 
-import static de.funke.tools.testutil.runner.EnvironmentFrameworkMethod.FOR;
-import static de.funke.tools.testutil.runner.EnvironmentFrameworkMethod.ON;
+import static com.test.tools.testutil.runner.EnvironmentFrameworkMethod.FOR;
+import static com.test.tools.testutil.runner.EnvironmentFrameworkMethod.ON;
 
 /**
  * This is a UTIL class to perform multiple tasks.

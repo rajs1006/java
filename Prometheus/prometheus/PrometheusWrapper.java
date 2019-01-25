@@ -1,6 +1,6 @@
-package de.funke.tools.testutil.prometheus;
+package com.test.tools.testutil.prometheus;
 
-import de.funke.tools.testutil.runner.EnvironmentRunListener;
+import com.test.tools.testutil.runner.EnvironmentRunListener;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.runners.model.TestClass;
 import org.slf4j.Logger;

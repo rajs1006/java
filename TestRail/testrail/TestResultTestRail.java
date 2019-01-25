@@ -1,4 +1,4 @@
-package de.funke.tools.testutil.testrail;
+package com.test.tools.testutil.testrail;
 
 import javax.annotation.Nonnull;
 import java.lang.annotation.ElementType;

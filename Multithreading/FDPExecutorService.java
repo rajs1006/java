@@ -1,4 +1,4 @@
-package de.funke.tools.testutil.runner;
+package com.test.tools.testutil.runner;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

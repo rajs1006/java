@@ -1,4 +1,4 @@
-package de.funke.tools.testutil.testrail;
+package com.test.tools.testutil.testrail;
 
 /**
  * This class is provided by the testrail-api2 for JAVA binding and downloaded from

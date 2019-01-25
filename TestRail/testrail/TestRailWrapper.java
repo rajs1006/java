@@ -1,6 +1,6 @@
-package de.funke.tools.testutil.testrail;
+package com.test.tools.testutil.testrail;
 
-import de.funke.tools.testutil.prometheus.PrometheusUtil;
+import com.test.tools.testutil.prometheus.PrometheusUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.runners.model.FrameworkMethod;
 import org.slf4j.Logger;

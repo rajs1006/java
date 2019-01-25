@@ -1,4 +1,4 @@
-package de.funke.tools.testutil.utils;
+package com.test.tools.testutil.utils;
 
 import javax.annotation.Nonnull;
 import java.util.LinkedList;

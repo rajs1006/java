@@ -1,4 +1,4 @@
-package de.funke.tools.testutil.utils;
+package com.test.tools.testutil.utils;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Iterables;

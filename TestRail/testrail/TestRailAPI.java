@@ -1,4 +1,4 @@
-package de.funke.tools.testutil.testrail;
+package com.test.tools.testutil.testrail;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;

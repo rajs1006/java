@@ -1,4 +1,4 @@
-package de.funke.tools.testutil.prometheus;
+package com.test.tools.testutil.prometheus;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
