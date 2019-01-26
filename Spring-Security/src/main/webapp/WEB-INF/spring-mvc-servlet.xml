@@ -1,0 +1,44 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:security="http://www.springframework.org/schema/security"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.3.xsd">
+     
+     <!-- Annotation are configuring the application -->
+     <mvc:annotation-driven/>
+	
+     <!-- Scan this package for all config annotations -->
+	<context:component-scan base-package="com.howtodoinjava.web" />
+	
+	<security:http use-expressions="true" auto-config="true" entry-point-ref="http403EntryPoint">
+    	<!-- Additional http configuration omitted -->
+    	<security:intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
+    	<security:custom-filter position="PRE_AUTH_FILTER" ref="siteminderFilter" />
+  	</security:http>
+
+    <bean id="siteminderFilter" class="org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter">
+	    <property name="principalRequestHeader" value="SM_USER"/>
+	    <property name="authenticationManager" ref="authenticationManager" />
+	</bean>
+	
+  	<bean id="preauthAuthProvider" class="org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider">
+	    <property name="preAuthenticatedUserDetailsService">
+	      	<bean id="userDetailsServiceWrapper"  class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">
+	        	<property name="userDetailsService" ref="customUserDetailsService"/>
+	      	</bean>
+	    </property>
+    </bean>
+
+    <security:authentication-manager alias="authenticationManager">
+      	<security:authentication-provider ref="preauthAuthProvider" />
+    </security:authentication-manager>	
+    
+    <bean id="customUserDetailsService" class="com.howtodoinjava.security.CustomUserDetailsService"></bean>
+    <bean id="http403EntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"></bean>
+    
+</beans>
