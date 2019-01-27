@@ -9,22 +9,22 @@ import org.junit.runners.model.RunnerScheduler;
  * @param <T> Type of count ie, String, Integer, Long
  * @author sraj 26-Oct-2018
  */
-public class FDPSchedulerFactory<T> {
+public class SchedulerFactory<T> {
 
     /**
      * Return the instance of scheduler.
      *
-     * @param runner      Instance of {@link FDPScheduler}
+     * @param runner      Instance of {@link Scheduler}
      * @param threadCount number of threads
      * @param <T>         Type of count ie, String, Integer, Long
      * @return Instance of {@link RunnerScheduler}
      */
-    public synchronized static <T> RunnerScheduler getInstance(Class<? extends FDPScheduler> runner, T threadCount) {
+    public synchronized static <T> RunnerScheduler getInstance(Class<? extends Scheduler> runner, T threadCount) {
         String className = runner.getSimpleName();
-        if (FDPSchedulerService.class.getSimpleName().equals(className)) {
-            return FDPSchedulerService.init(getThreadCount(threadCount));
+        if (SchedulerService.class.getSimpleName().equals(className)) {
+            return SchedulerService.init(getThreadCount(threadCount));
         }
-        return FDPExecutorService.init(getThreadCount(threadCount));
+        return ExecutorService.init(getThreadCount(threadCount));
     }
 
     /**

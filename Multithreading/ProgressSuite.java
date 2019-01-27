@@ -25,69 +25,18 @@ import java.util.Map;
 
 /**
  * Integration of the our test suites into gradle jenkins build environment.
- * <p>
- * That test suite is created in order to make the test results available
- * for the test in progress jenkins plugin.
- * <p>
- * This class also register results of {@link Prometheus} annotated test Classes on Prometheus.
- * <p>
- * Created by aherr on 18.10.2016.
- *
- * @link https://sconfluence.com.testmedien.de/display/FUNDigital/Testautomatisierung
- * @link https://wiki.jenkins-ci.org/display/JENKINS/Test+In+Progress+Plugin
  */
-public class FDPProgressSuite extends ProgressSuite {
+public class ProgressSuite extends ProgressSuite {
 
     /**
      * To log activities.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(FDPProgressSuite.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProgressSuite.class);
 
-    private final static String threadCount = System.getProperty("maxParallelTestThreads");
 
-    final String testClassesToInclude = System.getProperty("suiteTest.include", null);
-
-    public FDPProgressSuite(Class<?> klass, RunnerBuilder builder) throws InitializationError {
+    public ProgressSuite(Class<?> klass, RunnerBuilder builder) throws InitializationError {
         super(klass, builder);
-        setScheduler(FDPSchedulerFactory.getInstance(FDPSchedulerService.class, threadCount));
-    }
-
-    /**
-     * Filter out the runners we do not want to execute.
-     */
-    @Override
-    protected List<Runner> getChildren() {
-        List<Runner> runners = super.getChildren();
-        List<Runner> result = new ArrayList<>();
-        for (Runner runner : runners) {
-            if (isAllowed(runner)) {
-                result.add(runner);
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Check if a runner for a test class should be executed.
-     * That only the case if the system property <code>integrationTest.include</code> was NOT set or
-     * if the test class name matches the property value.
-     */
-    protected boolean isAllowed(Runner testRunner) {
-        String testClassName = getTestClassSimpleName(testRunner);
-        return testClassesToInclude == null || testClassesToInclude.trim().isEmpty() || testClassesToInclude.contains(testClassName);
-    }
-
-    /**
-     * @param runner runner to check
-     * @return get the test class' simple name form the given runner
-     */
-    private String getTestClassSimpleName(Runner runner) {
-        String testClassName = runner.getDescription().getClassName();
-        int startSimpleName = testClassName.lastIndexOf('.');
-        if (startSimpleName > 0) {
-            testClassName = testClassName.substring(startSimpleName + 1);
-        }
-        return testClassName;
+        setScheduler(SchedulerFactory.getInstance(SchedulerService.class, threadCount));
     }
 
 
@@ -100,19 +49,19 @@ public class FDPProgressSuite extends ProgressSuite {
     @Override
     public void run(RunNotifier notifier) {
         // Creating a listener to listen to all the results.
-        Result resultFDP = new Result();
-        RunListener resultRunListenerFDP = resultFDP.createListener();
-        notifier.addListener(resultRunListenerFDP);
+        Result result = new Result();
+        RunListener resultRunListener = result.createListener();
+        notifier.addListener(resultRunListener);
         // Listener to capture abrupt stop.
         EnvironmentRunListener environmentRunListener = new EnvironmentRunListener(notifier);
         notifier.addListener(environmentRunListener);
-        try {
+        try {DP
             // Calling super method {@link ProgressSuite#run}
             super.run(notifier);
         } finally {
             LOGGER.info("Start : Prometheus graph ");
             String suiteName = this.getTestClass().getJavaClass().getSimpleName();
-            processResult(notifier, resultFDP, resultRunListenerFDP, environmentRunListener, suiteName, PrometheusWrapper.checkGraphConditions(suiteName));
+            processResult(notifier, result, resultRunListener, environmentRunListener, suiteName, PrometheusWrapper.checkGraphConditions(suiteName));
             LOGGER.info("End : Prometheus graph");
         }
     }
@@ -121,10 +70,10 @@ public class FDPProgressSuite extends ProgressSuite {
      * This method calls {@link PrometheusUtil} and builds Prometheus Graph.
      *
      * @param notifier             instance of {@link RunNotifier}
-     * @param resultFDP            instance of {@link Result}
-     * @param resultRunListenerFDP instance of {@link RunListener}
+     * @param result            instance of {@link Result}
+     * @param resultRunListener instance of {@link RunListener}
      */
-    private void processResult(RunNotifier notifier, Result resultFDP, RunListener resultRunListenerFDP,
+    private void processResult(RunNotifier notifier, Result result, RunListener resultRunListener,
                                EnvironmentRunListener environmentRunListener, String suiteName, boolean buildGraph) {
         try {
             Map<String, TestRailFields> testRailMap = new HashMap<>();
@@ -135,14 +84,14 @@ public class FDPProgressSuite extends ProgressSuite {
             // in worst case scenario.
             processTestClass(prometheusMap, testRailMap, buildGraph);
             // Iterating over failure and removing the key from MAP for failureCLassName.
-            processFailedTestClass(resultFDP, prometheusMap, testRailMap, suiteName, buildGraph);
+            processFailedTestClass(result, prometheusMap, testRailMap, suiteName, buildGraph);
             // Loop for Tests with status PASS
             processTestClassMap(prometheusMap, testRailMap, suiteName, buildGraph);
         } catch (Exception e) {
             LOGGER.error("Failed to build prometheus graph", e);
         } finally {
             // Removing listener and destroying the instances of Prometheus graph objects.
-            notifier.removeListener(resultRunListenerFDP);
+            notifier.removeListener(resultRunListener);
             notifier.removeListener(environmentRunListener);
             PrometheusWrapper.destroy(buildGraph);
         }
@@ -169,20 +118,20 @@ public class FDPProgressSuite extends ProgressSuite {
     /**
      * This class process Failed test class for {@link PrometheusWrapper} and {@link TestRailWrapper}
      *
-     * @param resultFDP     Result instance of Notifier.
+     * @param result     Result instance of Notifier.
      * @param prometheusMap Map containing Test class and its value for Prometheus processing.
      * @param testRailMap   Map containing Test class and its value for TestRailFields processing.
      * @param suiteName     Name of suite
      * @param buildGraph    whether the build graph check in True/False {@link PrometheusWrapper#checkGraphConditions(String)}
      * @throws Exception Exception to be thrown.
      */
-    private void processFailedTestClass(Result resultFDP, Map<String, Map<String, Long>> prometheusMap, Map<String, TestRailFields> testRailMap, String suiteName, boolean buildGraph) throws Exception {
-        for (Failure failure : resultFDP.getFailures()) {
+    private void processFailedTestClass(Result result, Map<String, Map<String, Long>> prometheusMap, Map<String, TestRailFields> testRailMap, String suiteName, boolean buildGraph) throws Exception {
+        for (Failure failure : result.getFailures()) {
             Description desc = failure.getDescription();
             // Prometheus
             PrometheusWrapper.graphForFailedTest(prometheusMap, suiteName, buildGraph, desc.getTestClass());
             // TestRail
-            TestRailWrapper.updateErrorDetails(testRailMap, desc.getMethodName(), failure.getMessage(), resultFDP.getRunTime());
+            TestRailWrapper.updateErrorDetails(testRailMap, desc.getMethodName(), failure.getMessage(), result.getRunTime());
         }
     }
 

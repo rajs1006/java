@@ -9,12 +9,12 @@ import java.util.concurrent.ForkJoinPool;
  *
  * @author sraj 26-Oct-2018
  */
-public class FDPExecutorService extends FDPScheduler {
+public class ExecutorService extends Scheduler {
 
     /**
-     * Instance of {@link FDPExecutorService}
+     * Instance of {@link ExecutorService}
      */
-    private static FDPExecutorService fdpExecutor = null;
+    private static ExecutorService fdpExecutor = null;
 
     /**
      * Instance of {@link ExecutorService}
@@ -22,15 +22,15 @@ public class FDPExecutorService extends FDPScheduler {
     private static ExecutorService threadExecutor = null;
 
     /**
-     * Return singelton instance of {@link FDPExecutorService}
+     * Return singelton instance of {@link ExecutorService}
      *
      * @param threadCount Number of threads needed to initialize the pool.
-     * @return Instance of {@link FDPExecutorService}
+     * @return Instance of {@link ExecutorService}
      */
-    public static FDPExecutorService init(Integer threadCount) {
+    public static ExecutorService init(Integer threadCount) {
         setUpExecutor(getNumThreads(threadCount));
         if (fdpExecutor == null) {
-            fdpExecutor = new FDPExecutorService();
+            fdpExecutor = new ExecutorService();
         }
         return fdpExecutor;
     }
@@ -59,7 +59,7 @@ public class FDPExecutorService extends FDPScheduler {
 
     /**
      * This method run the last task and amkes sure that no asynchronous task is yet to run
-     * and also calls {@link FDPException} to maintain a consolidated view of all the errors
+     * and also calls {@link Exception} to maintain a consolidated view of all the errors
      * occurred while execution.
      */
     @Override

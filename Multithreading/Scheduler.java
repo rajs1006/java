@@ -10,12 +10,12 @@ import java.util.concurrent.TimeUnit;
  *
  * @author sraj 26-Oct-2018
  */
-public abstract class FDPScheduler implements RunnerScheduler {
+public abstract class Scheduler implements RunnerScheduler {
 
     /**
      * manages consolidated view of exceptions
      */
-    protected final FDPException fde = new FDPException();
+    protected final Exception fde = new Exception();
 
     /**
      * Return number of threads base on Thread numbers obtained
@@ -37,7 +37,7 @@ public abstract class FDPScheduler implements RunnerScheduler {
 
     /**
      * This method run the last task and makes sure that no asynchronous task is yet to run
-     * and also calls {@link FDPException} to maintain a consolidated view of all the errors
+     * and also calls {@link Exception} to maintain a consolidated view of all the errors
      * occurred while execution.
      */
     protected void finished(ExecutorService executor) {

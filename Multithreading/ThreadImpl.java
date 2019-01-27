@@ -2,7 +2,7 @@ public void stress() {
         final List<String> urls = collectedUrls2publication.keySet().stream().collect(Collectors.toList());
         LOG.info("stress(): urls.size = {} , Map size {} ", urls.size(), collectedUrls2publication.size());
         // Scheduler.
-        final RunnerScheduler scheduler = FDPSchedulerFactory.getInstance(FDPExecutorService.class, threadCount);
+        final RunnerScheduler scheduler = SchedulerFactory.getInstance(ExecutorService.class, threadCount);
         try {
             while (threadCount-- != 0) {
                 sleep(waitMillisBetweenRequests);

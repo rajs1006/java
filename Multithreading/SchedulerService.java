@@ -13,7 +13,7 @@ import static java.util.concurrent.ForkJoinTask.inForkJoinPool;
  * <p>
  * Created by Sraj , 08-Aug-18
  */
-public class FDPSchedulerService extends FDPScheduler {
+public class SchedulerService extends Scheduler {
 
     /**
      * Add tasks to be executed
@@ -27,7 +27,7 @@ public class FDPSchedulerService extends FDPScheduler {
     /**
      * Instantiate the object
      */
-    private static FDPSchedulerService fdpScheduler = null;
+    private static SchedulerService fdpScheduler = null;
 
     /**
      * Maintains the pool
@@ -35,15 +35,15 @@ public class FDPSchedulerService extends FDPScheduler {
     private static ForkJoinPool forkJoinPool = null;
 
     /**
-     * Return singelton instance of {@link FDPSchedulerService}
+     * Return singelton instance of {@link SchedulerService}
      *
      * @param threadCount Number of threads needed to initialize the pool.
-     * @return Instance of {@link FDPSchedulerService}
+     * @return Instance of {@link SchedulerService}
      */
-    public static FDPSchedulerService init(Integer threadCount) {
+    public static SchedulerService init(Integer threadCount) {
         setUpForkJoinPool(getNumThreads(threadCount));
         if (fdpScheduler == null) {
-            fdpScheduler = new FDPSchedulerService();
+            fdpScheduler = new SchedulerService();
         }
         return fdpScheduler;
     }
@@ -90,7 +90,7 @@ public class FDPSchedulerService extends FDPScheduler {
 
     /**
      * This method run the last task and amkes sure that no asynchronous task is yet to run
-     * and also calls {@link FDPException} to maintain a consolidated view of all the errors
+     * and also calls {@link Exception} to maintain a consolidated view of all the errors
      * occurred while execution.
      */
     @Override
