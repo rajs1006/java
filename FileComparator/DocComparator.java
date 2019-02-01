@@ -1,6 +1,6 @@
-package de.funke.util;
+package com.test.util;
 
-import de.funke.tools.testutil.utils.FileComparator;
+import com.test.tools.testutil.utils.FileComparator;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

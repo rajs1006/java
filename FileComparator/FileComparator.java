@@ -1,4 +1,4 @@
-package de.funke.tools.testutil.utils;
+package com.test.tools.testutil.utils;
 
 import difflib.Delta;
 import difflib.DiffAlgorithm;
