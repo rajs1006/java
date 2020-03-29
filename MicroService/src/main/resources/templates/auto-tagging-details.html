@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Autotagging details</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"
+          th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>
+
+    <script src="/webjars/jquery/1.11.1/jquery.min.js"/>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous" th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"/>
+</head>
+<body>
+<div class="container-fluid" style="margin-top: 20px">
+    <div class="row">
+        <div class="col-md-12 col-md-offset-0">
+            <div class="panel panel-primary">
+                <div class="dropdown-header">
+                    <a class="navbar-link navbar-btn navbar-right" style="margin-right:5px;color:blue;" th:href="@{/auto-tagging/sitemap-details}">Sitemaps</a>
+                    <a class="navbar-link navbar-btn navbar-right" style="margin-right:7px;color:blue;" th:href="@{/auto-tagging/article-details}">Articles</a>
+                    <div class="form-group form-control-static"/>
+                </div>
+                <div class="panel-heading">
+                    <h1 class="panel-title"
+                        th:utext="'Auto-tagging details'">
+                    </h1>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered">
+                            <thead class="thead-inverse">
+                            <tr>
+                                <th class="text-center">DB-Id</th>
+                                <th class="text-center">Publication</th>
+                                <th class="text-center">URL</th>
+                                <th class="text-center">Details</th>
+                            </tr>
+                            </thead>
+                            <form th:id="'fStats'"
+                                  method="post" th:action="@{/auto-tagging/schedule}" th:object="${detailForm}">
+                                <tr style="font-size:10px;"><td/><td/><td/>
+                                    <td class="text-right">
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-primary active" type="submit" id="submitButton" th:value="Submit">Submit</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr th:each="detail, d: *{details}">
+
+                                    <td class="text-center" th:text="${detail.id}"></td>
+                                    <td class="text-center" th:text="${detail.publication}"></td>
+                                    <input type="hidden" th:field="*{details[__${d.index}__].publication}"/>
+                                    <td class="text-center" th:text="${detail.url}"></td>
+                                    <td>
+                                            <table class="table table-hover table-bordered">
+                                                <tr>
+                                                    <th>Service</th>
+                                                    <th>Interval (Seconds)</th>
+                                                    <th>Enable</th>
+                                                </tr>
+
+                                                <tr style="font-size:10px;" th:each="scheduleDetail, idx : ${detail.scheduleDetails}">
+                                                    <td th:text="${scheduleDetail.serviceEnum}" th:value="${scheduleDetail.serviceEnum}"></td>
+                                                    <input type="hidden" th:field="*{details[__${d.index}__].scheduleDetails[__${idx.index}__].serviceEnum}"/>
+                                                    <td><input th:field="*{details[__${d.index}__].scheduleDetails[__${idx.index}__].delay}"/></td>
+                                                    <td><input type="checkbox" th:checked="${scheduleDetail.enable}"
+                                                               th:field="*{details[__${d.index}__].scheduleDetails[__${idx.index}__].enable}"/></td>
+                                                </tr>
+                                            </table>
+                                    </td>
+                                </tr>
+                            </form>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

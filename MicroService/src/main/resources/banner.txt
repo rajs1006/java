@@ -1,0 +1,13 @@
+       (    _____|
+        \   (
+         \   \
+          \   \
+           \   \
+            \   \
+       ______)   \
+      |___________)
+
+:: Application Version :: ${application.version}     :: Spring Boot :: ${spring-boot.formatted-version}
+
+
+

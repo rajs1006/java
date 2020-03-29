@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}"/>
+
+    <logger name="org.springframework.web.servlet.resource" level="ERROR"/>
+    <logger name="de.funkedigital.autotagging" level="INFO"/>
+
+    <property resource="application.yaml" />
+
+    <appender name="ELK_AWS" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <!-- using internal IP of ELK to access from inside of AWS, for speed and traffic reasons -->
+        <destination>logstash.aws.funkedigital.de:4560</destination>
+        <keepAliveDuration>5 minutes</keepAliveDuration>
+        <reconnectionDelay>30 seconds</reconnectionDelay>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>{"type":"aws-ms-log","application_name":"${spring.application.name}", "application_version":"${info.version}", "stage":"prod"}</customFields>
+        </encoder>
+    </appender>
+
+    <springProfile name="local" additivity="false" level="debug">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
+
+    <springProfile name="uat">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
+
+    <springProfile name="aws">
+        <root level="ERROR">
+            <appender-ref ref="CONSOLE" />
+            <appender-ref ref="ELK_AWS"/>
+        </root>
+    </springProfile>
+
+    <jmxConfigurator/>
+
+</configuration>

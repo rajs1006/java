@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Autotagging details</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"
+          th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>
+
+    <script src="/webjars/jquery/1.11.1/jquery.min.js"/>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous" th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"/>
+</head>
+<body>
+<div class="container-fluid" style="margin-top: 20px">
+    <div class="row">
+        <div class="col-md-12 col-md-offset-0">
+            <div class="panel panel-primary">
+                <div class="dropdown-header" >
+                    <a class="navbar-link navbar-btn navbar-right" style="margin-right:5px;color:blue;" th:href="@{/auto-tagging/details}">Details</a>
+                    <a class="navbar-link navbar-btn navbar-right" style="margin-right:7px;color:blue;"  th:href="@{/auto-tagging/sitemap-details}">Sitemaps</a>
+                    <form class="form-group form-control-static" id="fArticles"
+                          method="post" th:action="@{/auto-tagging/article-details}">
+
+                        <select class="active bg-info" name="requestedPub" th:onchange="'fArticles.submit()'">
+                            <option th:each="pub : *{publications}"
+                                    th:value="${pub}"
+                                    th:text="${pub}"
+                                    th:selected="${pub == requestedPub}">
+                            </option>
+                        </select>
+                        <select class="active bg-info" name="requestedRepo" th:onchange ="'fArticles.submit()'">
+                            <option th:each="repo : ${T(de.funkedigital.autotagging.enums.RepositoryEnum).values()}"
+                                    th:value="${repo}"
+                                    th:text="${repo}"
+                                    th:selected="${repo == requestedRepo}">
+                            </option>
+                        </select>
+                        <select class="active bg-info" name="requestedSystem" th:onchange ="'fArticles.submit()'">
+                            <option th:each="system : ${T(de.funkedigital.autotagging.enums.SystemEnum).values()}"
+                                    th:value="${system}"
+                                    th:text="${system}"
+                                    th:selected="${system == requestedSystem}">
+                            </option>
+                        </select>
+                        <input class = "active bg-info" style="height:16px" type="text" th:value="${article}" name="article" placeholder="Article ID/url"/>
+                        <button class = "btn-xs btn-primary active" style="font-size:9px;" type="submit" th:value="Search">Search</button>
+                        <b style="margin-left:5px" th:text="'Total records : '"/>
+                        <i th:text="${count}"/>
+                    </form>
+                </div>
+
+                <!--Executed Artciles-->
+                <div class="panel-heading" th:if="${requestedRepo ==
+                                            T(de.funkedigital.autotagging.enums.RepositoryEnum).Executed}">
+                    <h1 class="panel-title"
+                        th:utext="'Executed Articles'">
+                    </h1>
+                </div>
+                <div class="panel-body" th:if="${requestedRepo ==
+                                            T(de.funkedigital.autotagging.enums.RepositoryEnum).Executed}">
+                    <div class="table-responsive">
+                        <table class="table table-hover ">
+                            <thead class="thead-inverse">
+                            <tr>
+                                <th>DB-Id</th>
+                                <th>Publication</th>
+                                <th>Asset-Id</th>
+                                <th>Url</th>
+                                <th>Timestamp</th>
+                            </tr>
+                            </thead>
+                            <tr style="font-size:10px;" th:each="executedArticle: *{articles}">
+                                <td th:text="${executedArticle.id}"></td>
+                                <td th:text="${executedArticle.publication}"></td>
+                                <td th:text="${executedArticle.assetId}"></td>
+                                <td th:text="${executedArticle.url}"></td>
+                                <td th:text="${executedArticle.executionDate}"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <!--Pending Articles-->
+                <div class="panel-heading" th:if="${requestedRepo ==
+                                            T(de.funkedigital.autotagging.enums.RepositoryEnum).Pending}">
+                    <h1 class="panel-title"
+                        th:utext="'Pending Articles'">
+                    </h1>
+                </div>
+                <div class="panel-body" th:if="${requestedRepo ==
+                                            T(de.funkedigital.autotagging.enums.RepositoryEnum).Pending}">
+                    <div class="table-responsive">
+                        <table class="table table-hover ">
+                            <thead class="thead-inverse">
+                            <tr>
+                                <th>DB-Id</th>
+                                <th>Publication</th>
+                                <th>Url</th>
+                                <th>Timestamp</th>
+                            </tr>
+                            </thead>
+                            <tr style="font-size:10px;" th:each="pendingArticle: *{articles}">
+                                <td th:text="${pendingArticle.id}"></td>
+                                <td th:text="${pendingArticle.publication}"></td>
+                                <td th:text="${pendingArticle.url}"></td>
+                                <td th:text="${pendingArticle.executionDate}"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <!--Failed articles-->
+                <div class="panel-heading" th:if="${requestedRepo ==
+                                            T(de.funkedigital.autotagging.enums.RepositoryEnum).Failed}">
+                    <h1 class="panel-title"
+                        th:utext="'Failed Articles'">
+                    </h1>
+                </div>
+                <div class="panel-body" th:if="${requestedRepo ==
+                                            T(de.funkedigital.autotagging.enums.RepositoryEnum).Failed}">
+                    <div class="table-responsive">
+                        <table class="table table-hover ">
+                            <thead class="thead-inverse">
+                            <tr>
+                                <th>DB-Id</th>
+                                <th>Publication</th>
+                                <th>Url</th>
+                                <th>Timestamp</th>
+                            </tr>
+                            </thead>
+                            <tr style="font-size:10px;" th:each="failedArticle: *{articles}">
+                                <td th:text="${failedArticle.id}"></td>
+                                <td th:text="${failedArticle.publication}"></td>
+                                <td th:text="${failedArticle.url}"></td>
+                                <td th:text="${failedArticle.executionDate}"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

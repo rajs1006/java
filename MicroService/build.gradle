@@ -1,0 +1,106 @@
+buildscript {
+    ext {
+        springBootVersion = "1.5.10.RELEASE"
+        sonarVersion = "2.6.2"
+    }
+
+    repositories {
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:${sonarVersion}"
+        classpath "gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:0.9.10"
+    }
+}
+
+apply plugin: "org.springframework.boot"
+apply plugin: "org.sonarqube"
+apply plugin: "com.google.cloud.tools.jib"
+
+def imageTag = project.hasProperty('imageTag') ? project.property('imageTag') : 'latest'
+def imageUrl = '528761028293.dkr.ecr.eu-central-1.amazonaws.com/autotagging:' + imageTag
+
+jib {
+    from {
+        image = 'openjdk:8-jdk-alpine'
+    }
+    to {
+        image = imageUrl
+        credHelper = 'ecr-login'
+    }
+    container {
+        ports = ['10000']
+        jvmFlags = ['-Xms128m', '-Xmx256m', '-Xss10m', '-XX:MaxMetaspaceSize=256m']
+    }
+}
+
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "fdp-autotagging"
+        property "sonar.projectName", "fdp-autotagging"
+    }
+}
+
+tasks["sonarqube"].dependsOn = [build]
+
+build {
+    version             = "0.1"
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+jar {
+    archiveName 'autotagging.jar'
+}
+
+bootRun {
+    String activeProfile =  System.getProperty('spring.profiles.active', 'local')
+    systemProperties['spring.profiles.active'] = activeProfile
+}
+
+dependencies {
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+    compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    compile 'org.springframework.boot:spring-boot-starter-security'
+    compile 'org.springframework:spring-context-support' //required for programmatic scheduler creation!
+    compile 'org.webjars:bootstrap:3.3.7-1'
+    compile 'de.codecentric:spring-boot-admin-starter-client:1.5.7'
+
+    compile 'javax.xml.ws:jaxws-api:2.3.0'
+
+    compile 'ch.qos.logback:logback-core:1.2.3'
+    compile 'ch.qos.logback:logback-classic:1.2.3'
+    compile 'net.logstash.logback:logstash-logback-encoder:5.2'
+
+    compile 'com.google.code.gson:gson:2.2.2'
+    compile 'com.google.guava:guava:28.1-jre'
+    compile 'org.jsoup:jsoup:1.12.1'
+
+    implementation "javax.xml.bind:jaxb-api:2.2.11"
+    implementation "com.sun.xml.bind:jaxb-core:2.2.11"
+    implementation "com.sun.xml.bind:jaxb-impl:2.2.11"
+    implementation "javax.activation:activation:1.1.1"
+
+    runtime 'mysql:mysql-connector-java'
+    runtime 'com.h2database:h2'
+
+    compile 'javax.annotation:javax.annotation-api:1.2'
+    compile 'org.apache.httpcomponents:httpclient:4.5.10'
+    compile 'org.apache.commons:commons-lang3:3.9'
+    compile 'commons-io:commons-io:2.6'
+
+    compile 'org.springframework.boot:spring-boot-starter-aop'
+
+    testCompile 'org.mockito:mockito-all:1.10.19'
+    testCompile 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
+    testCompile 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

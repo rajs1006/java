@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Autotagging details</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"
+          th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>
+
+    <script src="/webjars/jquery/1.11.1/jquery.min.js"/>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous" th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"/>
+</head>
+<body>
+<div class="container-fluid" style="margin-top: 20px">
+    <div class="row">
+        <div class="col-md-12 col-md-offset-0">
+            <div class="panel panel-primary">
+                <div class="dropdown-header">
+                    <a class="navbar-link navbar-btn navbar-right" style="margin-right:7px;color:blue;" th:href="@{/auto-tagging/article-details}">Articles</a>
+                    <a class="navbar-link navbar-btn navbar-right" style="margin-right:5px;color:blue;" th:href="@{/auto-tagging/details}">Details</a>
+                    <form class="form-group form-control-static" id="fArticles"
+                          method="post" th:action="@{/auto-tagging/sitemap-details}">
+                        <select class="active bg-info" name="requestedPub" th:onchange="'fArticles.submit()'">
+                            <option th:each="pub : *{publications}"
+                                    th:value="${pub}"
+                                    th:text="${pub}"
+                                    th:selected="${pub == requestedPub}">
+                            </option>
+                        </select>
+                        <input class = "active bg-info" style="height:16px;" type="text" th:value="${sitemap}" name="sitemap" placeholder="Sitemap url"/>
+                        <button class = "btn-xs btn-primary active" style="font-size:9px;" type="submit" th:value="Search">Search</button>
+                        <b style="margin-left:5px" th:text="'Total records : '"/>
+                        <i th:text="${count}"/>
+                    </form>
+                </div>
+                <div class="panel-heading">
+                    <h1 class="panel-title"
+                        th:utext="'Auto-tagging sitemap details'">
+                    </h1>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover ">
+                            <thead class="thead-inverse">
+                            <tr>
+                                <th>DB-Id</th>
+                                <th>Publication</th>
+                                <th>Url</th>
+                                <th>lastModDate</th>
+                                <th>executionStatus</th>
+                                <th>sitemapLoadDate</th>
+                            </tr>
+                            </thead>
+                            <tr style="font-size:10px;" th:each="sitemap: *{sitemaps}">
+                                <td th:text="${sitemap.id}"></td>
+                                <td th:text="${sitemap.publication}"></td>
+                                <td th:text="${sitemap.url}"></td>
+                                <td th:text="${sitemap.lastModDate}"></td>
+                                <td th:text="${sitemap.executionStatus}"></td>
+                                <td th:text="${sitemap.siteMapLoadDate}"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
